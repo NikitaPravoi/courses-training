@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-
+import datetime
 
 class Course(models.Model):
 
@@ -40,10 +40,10 @@ class Course(models.Model):
         """
         Checks if course is completed for today
         """
-        return self.end_date < timezone.now()
+        return self.end_date < datetime.date.today()
 
     def can_enroll(self):
         """
-        Проверяет, можно ли записаться на курс.
+        Checks if you can enroll on course
         """
-        return self.end_date >= timezone.now()
+        return self.end_date >= datetime.date.today()

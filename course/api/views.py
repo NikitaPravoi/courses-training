@@ -1,3 +1,4 @@
+from django import forms
 from rest_framework.response import Response
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
@@ -11,6 +12,7 @@ class CourseFilter(django_filters.FilterSet):
     direction = django_filters.CharFilter(method='filter_by_direction')
     desc = django_filters.CharFilter(lookup_expr='icontains')
     start_date = django_filters.DateFilter(lookup_expr='gte')
+    # can_enroll = django_filters.BooleanFilter(lookup_expr='icontains')
 
     class Meta:
         model = Course
