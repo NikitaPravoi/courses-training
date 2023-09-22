@@ -50,7 +50,7 @@ class EnrollCourseView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
-        course_id = self.kwargs['course_id']
+        course_id = request.data.get('course_id')
 
         try:
             course = Course.objects.get(id=course_id)
@@ -59,10 +59,15 @@ class EnrollCourseView(generics.CreateAPIView):
 
         user = request.user
 
+        # Check if user can enroll
+        if not course.can_enroll():
+            return Response({'message': 'Course has already ended'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check if user is already assigned
         if user in course.students.all():
             return Response({'message': 'You are already assigned on that course'}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Add a user
         course.students.add(user)
 
         return Response({'message': 'You are successfully enrolled'}, status=status.HTTP_201_CREATED)
-
